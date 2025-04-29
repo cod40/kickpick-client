@@ -4,7 +4,7 @@
 
 ## 기술 스택
 
-- **Framework:** Next.js 14
+- **Framework:** Next.js 15 with Turbopack
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **Animation:** Framer Motion
@@ -23,7 +23,7 @@ cd kickpick-client
 # 패키지 설치
 npm install
 
-# 개발 서버 실행
+# 개발 서버 실행 (with Turbopack)
 npm run dev
 ```
 
