@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 
 interface PageLayoutProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-export default function PageLayout({ children }: PageLayoutProps) {
+export default function PageLayout({ children, className }: PageLayoutProps) {
   return (
-    <main className="w-full flex flex-col pb-4">
+    <main className={`w-full flex flex-col pb-4 ${className}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

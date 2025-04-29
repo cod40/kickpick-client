@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
 
   return (
-    <PageLayout>
+    <PageLayout className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-center text-green-700 mb-8">
         ⚽ KickPick
       </h1>
@@ -49,10 +49,10 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
-              type="email"
+              type="id"
               placeholder="이메일"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={id}
+              onChange={(e) => setId(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-green-500 transition-colors"
             />
           </div>

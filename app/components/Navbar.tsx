@@ -10,6 +10,10 @@ export default function Navbar() {
     router.push(`/${page.toLowerCase()}`);
   };
 
+  if (pathname === "/login" || pathname === "/signup") {
+    return;
+  }
+
   return (
     <Card className="fixed bottom-2 shadow-md max-w-[448px] w-[93%] h-12 border border-gray-300">
       <nav className="flex justify-between items-center h-full px-4 sm:px-6 text-black">
