@@ -80,10 +80,19 @@ export default function VoteModal({
                 className="flex items-center border rounded-lg p-3 hover:border-green-500 transition-color"
               >
                 <div className="w-[15%] font-medium text-black">{time}</div>
-                <div className="flex-1 px-4">
-                  <div className="text-sm text-gray-500 space-y-4">
-                    {/* TODO: 참여자 목록 */}
-                    아직 참여자가 없습니다
+                <div className="w-[50%] flex-1 px-4">
+                  <div className="overflow-x-auto">
+                    <div className="grid grid-flow-col grid-rows-4 gap-x-5 text-sm text-gray-500 min-w-max">
+                      {/* TODO: 참여자 목록 */}
+                      {/* 아직 참여자가 없습니다 */}
+                      {Array(30)
+                        .fill("김상도")
+                        .map((name, index) => (
+                          <div key={index} className="truncate">
+                            {name}
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
                 <button
@@ -102,8 +111,43 @@ export default function VoteModal({
         )}
 
         {activeTab === "opponent" && (
-          <div className="p-4 text-center text-gray-500">
-            아직 매칭된 상대팀이 없습니다
+          <div className="p-6">
+            <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-gray-700">
+                    자체전
+                  </div>
+                  <div className="text-sm text-gray-500">{formattedDate}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsConfirmed((prev) => !prev)}
+                className={`px-6 py-2.5 rounded-lg transition-all duration-200 font-medium ${
+                  isConfirmed
+                    ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200"
+                    : "bg-green-500 hover:bg-green-600 text-white shadow-green-200"
+                } shadow-lg transform hover:scale-105 active:scale-100`}
+              >
+                {isConfirmed ? "취소" : "확정"}
+              </button>
+            </div>
           </div>
         )}
 
