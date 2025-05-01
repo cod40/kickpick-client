@@ -111,7 +111,7 @@ export default function VoteModal({
         )}
 
         {activeTab === "opponent" && (
-          <div className="p-6">
+          <div className="py-5">
             <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -139,7 +139,7 @@ export default function VoteModal({
               </div>
               <button
                 onClick={() => setIsConfirmed((prev) => !prev)}
-                className={`px-6 py-2.5 rounded-lg transition-all duration-200 font-medium ${
+                className={`text-sm px-6 py-2.5 rounded-lg transition-all duration-200 font-medium ${
                   isConfirmed
                     ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200"
                     : "bg-green-500 hover:bg-green-600 text-white shadow-green-200"
