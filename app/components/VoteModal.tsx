@@ -71,7 +71,7 @@ export default function VoteModal({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-4 hide-scrollbar">
         {activeTab === "vote" && (
           <div className="space-y-2">
             {timeSlots.map((time) => (
@@ -81,8 +81,8 @@ export default function VoteModal({
               >
                 <div className="w-[15%] font-medium text-black">{time}</div>
                 <div className="w-[50%] flex-1 px-4">
-                  <div className="overflow-x-auto">
-                    <div className="grid grid-flow-col grid-rows-4 gap-x-5 text-sm text-gray-500 min-w-max">
+                  <div className="overflow-x-auto hide-scrollbar">
+                    <div className="grid grid-flow-col grid-rows-4 gap-x-5 text-sm text-gray-500 min-w-max min-h-20">
                       {/* TODO: 참여자 목록 */}
                       {/* 아직 참여자가 없습니다 */}
                       {Array(30)

@@ -44,3 +44,23 @@ a {
     color-scheme: dark;
   }
 }
+
+/* Chrome, Safari */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Internet Explorer */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+}
+
+/* Opera */
+.hide-scrollbar::-o-scrollbar {
+  display: none;
+}
