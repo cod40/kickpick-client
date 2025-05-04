@@ -6,26 +6,19 @@ import Card from "../components/ui/Card";
 import PageLayout from "../components/ui/PageLayout";
 import Image from "next/image";
 import SuccessModal from "../components/ui/SuccessModal";
+import { Team } from "@/types/team";
+import { register } from "@/api/auth/register";
+import useSWR from "swr";
 
 interface ValidationErrors {
   username?: string;
   password?: string;
   passwordConfirm?: string;
   team?: string;
-  verificationCode?: string;
+  team_code?: string;
   name?: string;
+  role_code?: string;
 }
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-const TEAMS: Team[] = [
-  { id: 1, name: "fc-ayas" },
-  { id: 2, name: "킥픽FC" },
-  { id: 3, name: "슛돌이FC" },
-];
 
 const POSITIONS = [
   { id: 1, name: "피봇", bgColor: "bg-red-500", textColor: "text-white" },
@@ -39,15 +32,18 @@ const POSITIONS = [
 
 export default function SignupPage() {
   const router = useRouter();
+  const { data: teams } = useSWR<Team[]>("api/teams");
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     passwordConfirm: "",
     team: "",
-    verificationCode: "",
+    team_code: "",
     name: "",
     profileImage: "",
     positions: [] as string[],
+    role_code: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -79,8 +75,8 @@ export default function SignupPage() {
       newErrors.team = "팀을 선택해주세요";
     }
 
-    if (!formData.verificationCode) {
-      newErrors.verificationCode = "인증 코드를 입력해주세요";
+    if (!formData.team_code) {
+      newErrors.team_code = "팀 코드를 입력해주세요";
     }
 
     if (!formData.name) {
@@ -106,29 +102,41 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 이름의 공백 제거
+    setFormData((prev) => ({
+      ...prev,
+      name: prev.name.trim(),
+    }));
+
+    console.log("폼 제출 시도:", formData);
+
     if (!validateForm()) {
+      console.log("유효성 검사 실패:", errors);
       return;
     }
 
     try {
-      // TODO: API 연동
-      // const response = await fetch("/api/signup", {
-      //   method: "POST",
-      //   body: JSON.stringify(formData),
-      // });
+      const registerData = {
+        login_id: formData.username,
+        password: formData.password,
+        name: formData.name.trim(), // 여기서도 한번 더 trim 처리
+        team: formData.team,
+        team_code: formData.team_code,
+        role_code: formData.role_code || undefined,
+        profile_image: formData.profileImage || undefined,
+      };
 
-      // if (!response.ok) throw new Error("회원가입에 실패했습니다");
+      console.log("API 요청 데이터:", registerData);
 
-      // 임시로 인증 코드 검증 (나중에 API로 대체)
-      if (formData.verificationCode !== "1234") {
-        setErrors({ verificationCode: "잘못된 인증 코드입니다" });
-        return;
-      }
-
-      // 회원가입 성공 시 모달 표시
+      await register(registerData);
+      console.log("회원가입 성공!");
       setIsSuccessModalOpen(true);
     } catch (err) {
       console.error("회원가입 실패:", err);
+      if (err instanceof Error) {
+        console.log("에러 메시지:", err.message);
+        setErrors({ team_code: err.message });
+      }
     }
   };
 
@@ -311,18 +319,21 @@ export default function SignupPage() {
                 </svg>
               </div>
 
-              {isTeamDropdownOpen && (
+              {isTeamDropdownOpen && teams && (
                 <div className="absolute z-10 w-full mt-1 bg-black rounded-lg shadow-lg overflow-hidden">
-                  {TEAMS.map((team) => (
+                  {teams.map((team) => (
                     <div
                       key={team.id}
                       onClick={() => {
-                        setFormData({ ...formData, team: team.name });
+                        setFormData({
+                          ...formData,
+                          team: team.name,
+                        });
                         setIsTeamDropdownOpen(false);
                       }}
                       className="px-4 py-3 text-white hover:bg-gray-900 cursor-pointer transition-colors"
                     >
-                      {team.name}
+                      <div className="font-medium">{team.name}</div>
                     </div>
                   ))}
                 </div>
@@ -330,6 +341,44 @@ export default function SignupPage() {
             </div>
             {errors.team && (
               <p className="text-red-500 text-xs mt-1">{errors.team}</p>
+            )}
+          </div>
+
+          {/* 팀 코드 입력 필드 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              팀 코드 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="팀 코드를 입력해주세요"
+              value={formData.team_code}
+              onChange={(e) =>
+                setFormData({ ...formData, team_code: e.target.value })
+              }
+              className="w-full px-4 py-3 rounded-lg bg-black text-white placeholder-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+            />
+            {errors.team_code && (
+              <p className="text-red-500 text-xs mt-1">{errors.team_code}</p>
+            )}
+          </div>
+
+          {/* 팀 관리자 인증코드 입력 필드 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              팀 관리자 인증코드
+            </label>
+            <input
+              type="text"
+              placeholder="팀 관리자이신 경우 인증코드를 입력해주세요"
+              value={formData.role_code}
+              onChange={(e) =>
+                setFormData({ ...formData, role_code: e.target.value })
+              }
+              className="w-full px-4 py-3 rounded-lg bg-black text-white placeholder-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+            />
+            {errors.role_code && (
+              <p className="text-red-500 text-xs mt-1">{errors.role_code}</p>
             )}
           </div>
 
@@ -365,27 +414,6 @@ export default function SignupPage() {
                 );
               })}
             </div>
-          </div>
-
-          {/* 인증 코드 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              인증 코드 <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="인증 코드를 입력해주세요"
-              value={formData.verificationCode}
-              onChange={(e) =>
-                setFormData({ ...formData, verificationCode: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg bg-black text-white placeholder-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
-            />
-            {errors.verificationCode && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.verificationCode}
-              </p>
-            )}
           </div>
 
           <p className="text-sm text-gray-500 mt-4">
