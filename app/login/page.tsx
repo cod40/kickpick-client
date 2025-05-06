@@ -4,9 +4,12 @@ import Card from "../components/ui/Card";
 import PageLayout from "../components/ui/PageLayout";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/api/auth/login";
+import { useAuthStore } from "@/store/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const setToken = useAuthStore((state) => state.setToken);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,21 +18,21 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    // TODO: 이메일/비밀번호 validation
+    if (!id || !password) {
+      setError("아이디와 비밀번호를 입력해주세요");
+      return;
+    }
 
     try {
-      // TODO: API 연동
-      // const response = await fetch("/api/login", {
-      //   method: "POST",
-      //   body: JSON.stringify({ email, password }),
-      // });
+      const response = await login({
+        login_id: id,
+        password: password,
+      });
 
-      // if (!response.ok) throw new Error("로그인에 실패했습니다");
+      // Zustand store에 토큰 저장
+      setToken(response.access_token);
 
-      // 임시로 쿠키 설정 (나중에 API 응답으로 대체)
       router.push("/home");
-      // document.cookie = "token=temporary-token; path=/";
-      // router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "로그인에 실패했습니다");
     }
@@ -49,11 +52,11 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
-              type="id"
-              placeholder="이메일"
+              type="text"
+              placeholder="아이디"
               value={id}
               onChange={(e) => setId(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-green-500 transition-colors"
+              className="w-full px-4 py-3 rounded-lg bg-black text-white placeholder-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
             />
           </div>
           <div>
@@ -62,7 +65,7 @@ export default function LoginPage() {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-green-500 transition-colors"
+              className="w-full px-4 py-3 rounded-lg bg-black text-white placeholder-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
             />
           </div>
 

@@ -119,11 +119,12 @@ export default function SignupPage() {
       const registerData = {
         login_id: formData.username,
         password: formData.password,
-        name: formData.name.trim(), // 여기서도 한번 더 trim 처리
+        name: formData.name.trim(),
         team: formData.team,
         team_code: formData.team_code,
         role_code: formData.role_code || undefined,
         profile_image: formData.profileImage || undefined,
+        positions: formData.positions,
       };
 
       console.log("API 요청 데이터:", registerData);

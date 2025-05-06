@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { SWRConfig } from "swr";
 import ky from "ky";
+import { useAuthStore } from "./store/auth";
 
 if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
   throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
@@ -18,11 +19,16 @@ export class ApiError {
 }
 
 export const api = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL + "/",
   hooks: {
     beforeRequest: [
       (request) => {
         request.headers.set("Content-Type", "application/json");
+        const token = useAuthStore.getState().token;
+        if (token) {
+          request.headers.set("Authorization", `Bearer ${token}`);
+          console.log("token", token);
+        }
       },
     ],
     afterResponse: [
