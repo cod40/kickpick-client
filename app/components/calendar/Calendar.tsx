@@ -48,6 +48,11 @@ export default function Calendar({ selected, onSelect }: CalendarProps) {
 
   .rdp-selected {
   }
+
+  // .rdp-day_button{
+  // border-bottom: 1px solid blue;
+  // }
+
   `;
 
   return (
