@@ -6,6 +6,12 @@ import { useState } from "react";
 import HistoryModal from "../components/HistoryModal";
 import PositionBadge from "../components/ui/PositionBadge";
 import { getPositionsByNames } from "@/constants/positions";
+import { getProfile } from "@/api/user/profile";
+import { GetProfileResponse } from "@/types/user";
+import useSWR from "swr";
+import { useAuthStore } from "@/store/auth";
+import { deleteCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 const mockHistory = [
   {
@@ -21,7 +27,7 @@ const mockHistory = [
   {
     date: "2024.04.01",
     time: "18:00~20:00",
-    result: "불참",
+    result: "참여 완료",
   },
 ];
 
@@ -40,7 +46,7 @@ const allHistory = [
   {
     date: "2024.03.11",
     time: "19:00~21:00",
-    result: "불참",
+    result: "참여 완료",
   },
   {
     date: "2024.03.04",
@@ -55,7 +61,7 @@ const allHistory = [
   {
     date: "2024.02.19",
     time: "20:00~22:00",
-    result: "불참",
+    result: "참여 완료",
   },
   {
     date: "2024.02.12",
@@ -66,6 +72,23 @@ const allHistory = [
 
 export default function ProfilePage() {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const { data: profileData } = useSWR<GetProfileResponse>(
+    "api/profile",
+    getProfile
+  );
+  const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // 쿠키에서 토큰 삭제
+    deleteCookie("token");
+    // Zustand 스토어에서 토큰 삭제
+    logout();
+    // 로그인 페이지로 이동
+    router.push("/login");
+  };
+
+  console.log(profileData);
 
   return (
     <main className="w-full mx-auto py-4 space-y-4 mb-12">
@@ -74,15 +97,20 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center space-y-4">
           <div className="relative w-24 h-24">
             <Image
-              src="https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp"
+              src={
+                profileData?.profile_image ||
+                "https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp"
+              }
               alt="프로필 이미지"
               fill
               className="rounded-full object-cover border-4 border-white shadow-lg"
             />
           </div>
           <div className="text-center">
-            <h2 className="text-xl font-bold text-gray-800">sangdo</h2>
-            <p className="text-gray-500">fc-ayas</p>
+            <h2 className="text-xl font-bold text-gray-800">
+              {profileData?.name}
+            </h2>
+            <p className="text-gray-500">{profileData?.team}</p>
           </div>
         </div>
       </Card>
@@ -103,21 +131,14 @@ export default function ProfilePage() {
       <Card className="p-4">
         <h3 className="font-medium text-gray-800 mb-3">선호 포지션</h3>
         <div className="flex flex-wrap gap-2">
-          {getPositionsByNames([
-            "피봇",
-            "아라",
-            "윙",
-            "고정수비",
-            "키퍼",
-            "전능수비",
-            "올라운더",
-          ]).map((position) => (
-            <PositionBadge
-              key={position.id}
-              position={position}
-              variant="light"
-            />
-          ))}
+          {profileData?.positions &&
+            getPositionsByNames(profileData.positions).map((position) => (
+              <PositionBadge
+                key={position.id}
+                position={position}
+                variant="light"
+              />
+            ))}
         </div>
       </Card>
 
@@ -161,7 +182,10 @@ export default function ProfilePage() {
         <button className="w-full py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors">
           개인정보 수정
         </button>
-        <button className="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors">
+        <button
+          onClick={handleLogout}
+          className="w-full py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+        >
           로그아웃
         </button>
       </div>
