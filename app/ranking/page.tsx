@@ -49,7 +49,7 @@ export default function RankingPage() {
         🏃 참여왕 순위
       </h1>
       <p className="text-blue-700 mb-6 text-center">
-        이번 달 가장 열심히 참여한 멤버를 확인해보세요!
+        지금까지 가장 열심히 참여한 멤버를 확인해보세요!
       </p>
 
       {/* 내 순위 */}
@@ -60,7 +60,7 @@ export default function RankingPage() {
             <div className="w-10 h-10 rounded-full bg-gray-200" />
             <div>
               <div className="font-medium text-gray-800">나의 순위</div>
-              <div className="text-sm text-gray-500">이번 달 18회 참여</div>
+              <div className="text-sm text-gray-500">총 18회 참여</div>
             </div>
           </div>
           <div className="text-lg font-medium text-green-600">18회</div>
