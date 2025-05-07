@@ -12,6 +12,7 @@ import useSWR from "swr";
 import { useAuthStore } from "@/store/auth";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import PageLayout from "@/components/ui/PageLayout";
 
 const mockHistory = [
   {
@@ -91,7 +92,7 @@ export default function ProfilePage() {
   console.log(profileData);
 
   return (
-    <main className="w-full mx-auto py-4 space-y-4 mb-12">
+    <PageLayout>
       {/* 프로필 헤더 */}
       <Card className="p-6">
         <div className="flex flex-col items-center space-y-4">
@@ -179,7 +180,10 @@ export default function ProfilePage() {
 
       {/* 버튼 그룹 */}
       <div className="space-y-3">
-        <button className="w-full py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors">
+        <button
+          onClick={() => router.push("/profile/edit")}
+          className="w-full py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"
+        >
           개인정보 수정
         </button>
         <button
@@ -195,6 +199,6 @@ export default function ProfilePage() {
         onClose={() => setIsHistoryModalOpen(false)}
         history={allHistory}
       />
-    </main>
+    </PageLayout>
   );
 }

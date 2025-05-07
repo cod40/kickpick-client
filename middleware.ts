@@ -6,9 +6,10 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = !!token;
   const isLoginPage = request.nextUrl.pathname === "/login";
   const isSignupPage = request.nextUrl.pathname === "/signup";
+  const isRootPage = request.nextUrl.pathname === "/";
 
-  // 로그인된 사용자가 /login 또는 /signup 페이지 접근 시 홈으로 리다이렉트
-  if (isAuthenticated && (isLoginPage || isSignupPage)) {
+  // 로그인된 사용자가 /, /login 또는 /signup 페이지 접근 시 홈으로 리다이렉트
+  if (isAuthenticated && (isLoginPage || isSignupPage || isRootPage)) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 

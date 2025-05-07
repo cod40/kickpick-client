@@ -1,5 +1,6 @@
 "use client";
 
+import PageLayout from "@/components/ui/PageLayout";
 import Card from "../components/ui/Card";
 
 interface RankingUser {
@@ -44,7 +45,7 @@ const mockRankings: RankingUser[] = [
 
 export default function RankingPage() {
   return (
-    <main className="w-full mx-auto py-4 space-y-4 mb-12">
+    <PageLayout>
       <h1 className="text-2xl font-bold text-green-800 text-center mt-6 mb-2">
         🏃 참여왕 순위
       </h1>
@@ -96,6 +97,6 @@ export default function RankingPage() {
           ))}
         </div>
       </Card>
-    </main>
+    </PageLayout>
   );
 }
