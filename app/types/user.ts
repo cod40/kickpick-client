@@ -21,6 +21,11 @@ export interface RegisterUserRequest {
   positions: string[];
 }
 
+export interface PasswordChangeRequest {
+  current_password: string;
+  new_password: string;
+}
+
 // User 인터페이스를 재사용
 export type RegisterUserResponse = User;
 

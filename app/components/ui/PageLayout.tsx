@@ -9,7 +9,7 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, className }: PageLayoutProps) {
   return (
-    <main className={`w-full flex flex-col py-4 ${className}`}>
+    <main className={`w-full flex flex-col pt-4 pb-20 ${className}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

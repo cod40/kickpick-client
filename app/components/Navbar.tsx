@@ -10,11 +10,7 @@ export default function Navbar() {
     router.push(`/${page.toLowerCase()}`);
   };
 
-  if (
-    pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/profile/edit"
-  ) {
+  if (pathname === "/login" || pathname === "/signup") {
     return;
   }
 

@@ -50,23 +50,13 @@ export default function EditProfilePage() {
 
   return (
     <PageLayout>
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">프로필 수정</h1>
-        {!isEditMode && (
-          <button
-            onClick={startEdit}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            수정
-          </button>
-        )}
-      </div>
-
       {/* 프로필 이미지 섹션 */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4 text-black">프로필 이미지</h2>
-        <div className="flex items-center space-x-4">
-          <div className="relative w-24 h-24">
+        <div className="flex flex-col items-center">
+          <h2 className="text-lg font-semibold mb-6 text-black">
+            프로필 이미지
+          </h2>
+          <div className="relative w-24 h-24 mb-4">
             <Image
               src={profileData?.profile_image || "/default-profile.png"}
               alt="프로필 이미지"
@@ -143,6 +133,33 @@ export default function EditProfilePage() {
         </div>
       </Card>
 
+      {/* 수정/취소/저장 버튼 */}
+      <div className="flex justify-end mt-4">
+        {isEditMode ? (
+          <div className="space-x-3">
+            <button
+              onClick={() => setIsEditMode(false)}
+              className="px-6 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-black"
+            >
+              취소
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+            >
+              저장
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={startEdit}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+          >
+            수정
+          </button>
+        )}
+      </div>
+
       {/* 비밀번호 변경 섹션 */}
       <Card className="p-6">
         <div className="flex justify-between items-center">
@@ -155,25 +172,6 @@ export default function EditProfilePage() {
           </button>
         </div>
       </Card>
-
-      {/* 저장 버튼 */}
-      {isEditMode && (
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={() => setIsEditMode(false)}
-            className="px-6 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-black"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            저장
-          </button>
-        </div>
-      )}
-
       {/* 비밀번호 변경 모달 */}
       <PasswordChangeModal
         isOpen={isPasswordModalOpen}
